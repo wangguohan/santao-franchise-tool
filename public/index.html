@@ -386,19 +386,19 @@
 
 <script>
   // ── Pricing Data (S区 · 山东) ──
-  // 动态权益：根据学段匹配对应的绝招班
-  function bonusFor(tierId, stage) {
+  // 动态权益：根据套餐档位显示对应的赠送权益组合
+  function bonusFor(tierId) {
     const map = {
-      's-std': { '\u521D\u4E2D': '\u4E2D\u8003\u7EDD\u62DB\u73ED(2\u90091)', '\u9AD8\u4E2D': '\u9AD8\u8003\u7EDD\u62DB\u73ED(2\u90091)' },
-      'e-std': { '\u521D\u4E2D': '\u4E2D\u8003\u7EDD\u62DB\u73ED(3\u90091)', '\u9AD8\u4E2D': '\u9AD8\u8003\u7EDD\u62DB\u73ED(3\u90091)', '\u521D+\u9AD8': '\u4E2D\u8003\u7EDD\u62DB\u73ED(3\u90091)\u3001\u9AD8\u8003\u7EDD\u62DB\u73ED(3\u90091)' },
-      'e-flag': { '\u521D+\u9AD8': '\u4E2D\u8003\u7EDD\u62DB(2\u90091)\u3001\u547D\u9898\u731C\u60F3(1\u671F)' },
-      'sch-full': { '\u521D+\u9AD8': '\u4E2D\u8003\u7EDD\u62DB\u73ED\u3001\u9AD8\u8003\u7EDD\u62DB\u73ED\u3001\u547D\u9898\u731C\u60F3' }
+      's-std': '\u4E2D\u8003\u7EDD\u62DB\u73ED/\u9AD8\u8003\u7EDD\u62DB\u73ED\u968F\u5B66\u6BB5\u9879\u76EE2\u90091',
+      'e-std': '\u4E2D\u8003\u7EDD\u62DB\u73ED/\u9AD8\u8003\u7EDD\u62DB\u73ED/\u547D\u9898\u731C\u60F3\u73ED\u968F\u5B66\u6BB5\u9879\u76EE3\u90091',
+      'e-flag': '\u547D\u9898\u731C\u60F3\u73ED1\u671F\uFF0C\u4E2D\u8003\u7EDD\u62DB\u73ED/\u9AD8\u8003\u7EDD\u62DB\u73ED2\u90091',
+      'sch-full': '\u4E2D\u8003\u7EDD\u62DB\u73ED\u3001\u9AD8\u8003\u7EDD\u62DB\u73ED\u3001\u547D\u9898\u731C\u60F3\u73ED'
     };
-    return (map[tierId] && map[tierId][stage]) || null;
+    return map[tierId] || null;
   }
   function getPerks(tier, stage) {
     const base = tier.perks || [];
-    const bonus = bonusFor(tier.id, stage);
+    const bonus = bonusFor(tier.id);
     return bonus ? [...base, bonus] : base;
   }
 
@@ -553,7 +553,7 @@
       html += '<div style="font-size:13px;color:var(--text-secondary);margin-top:2px">' + t.highlight + '</div></div>';
       html += '<div class="rec-price">&yen;' + formatPrice(t.price) + '<small>' + (t.price >= 10000 ? '\u4E07' : '\u5143') + '</small></div></div>';
       html += '<div class="rec-meta">';
-      html += '<span>\u542B <strong>' + t.boxes + '\u53F0</strong> AI\u667A\u5B66\u7BB1\u5B50</span>';
+      html += '<span>\u542B <strong>' + t.boxes + '\u53F0</strong> AI\u667A\u5B66\u76D2\u5B50</span>';
       html += '<span>\u542B <strong>' + t.hours + '</strong> \u8BFE\u65F6</span>';
       if (plan.tiers.length > 1 && t.stage) html += '<span>\u9002\u7528\u5B66\u6BB5: <strong>' + t.stage.join(' / ') + '</strong></span>';
       html += '</div>';
@@ -570,7 +570,7 @@
       tiers.forEach(t => html += '<th>' + t.name + '</th>');
       html += '</tr></thead><tbody>';
       html += '<tr><td>\u5408\u4F5C\u8D39\u7528</td>' + tiers.map(t => '<td class="highlight">&yen;' + formatPrice(t.price) + '</td>').join('') + '</tr>';
-      html += '<tr><td>AI\u667A\u5B66\u7BB1\u5B50</td>' + tiers.map(t => '<td>' + t.boxes + '\u53F0</td>').join('') + '</tr>';
+      html += '<tr><td>AI\u667A\u5B66\u76D2\u5B50</td>' + tiers.map(t => '<td>' + t.boxes + '\u53F0</td>').join('') + '</tr>';
       html += '<tr><td>\u8BFE\u65F6\u6570</td>' + tiers.map(t => '<td>' + t.hours + '</td>').join('') + '</tr>';
       html += '<tr><td>\u8D60\u9001\u6743\u76CA</td>' + tiers.map(t => '<td>' + getPerks(t, state.stage).length + '\u9879</td>').join('') + '</tr>';
       html += '</tbody></table></div>';
@@ -591,7 +591,7 @@
     html += '<div class="summary-item"><span class="label">\u52A0\u76DF\u6A21\u5F0F</span><span class="value">' + plan.name + '</span></div>';
     html += '<div class="summary-item"><span class="label">\u65B9\u6848\u7C7B\u578B</span><span class="value">' + rec.name + '</span></div>';
     if (state.stage) html += '<div class="summary-item"><span class="label">\u670D\u52A1\u5B66\u6BB5</span><span class="value">' + (stageMap[state.stage]||state.stage) + '</span></div>';
-    html += '<div class="summary-item"><span class="label">AI\u667A\u5B66\u7BB1\u5B50</span><span class="value">' + rec.boxes + '\u53F0</span></div>';
+    html += '<div class="summary-item"><span class="label">AI\u667A\u5B66\u76D2\u5B50</span><span class="value">' + rec.boxes + '\u53F0</span></div>';
     html += '<div class="summary-item"><span class="label">\u8BFE\u65F6\u6570</span><span class="value">' + rec.hours + '</span></div>';
     html += '<div class="summary-item"><span class="label">\u8D60\u9001\u6743\u76CA</span><span class="value" style="white-space:pre-wrap">' + getPerks(rec, state.stage).join('\n') + '</span></div>';
     html += '<div class="summary-item"><span class="label">\u590D\u8D2D\u4EF7</span><span class="value">' + rec.repurchase + '</span></div>';
@@ -664,7 +664,7 @@
       [{ tag: 'text', text: '\n\u65B9\u6848\uFF1A' + (rec.name || '-') }],
       [{ tag: 'text', text: '\n\u5408\u4F5C\u8D39\u7528\uFF1A\u00A5' + pStr }],
       [{ tag: 'text', text: '\n\u670D\u52A1\u5B66\u6BB5\uFF1A' + (state.stage ? (stageMap[state.stage] || state.stage) : '-') }],
-      [{ tag: 'text', text: '\nAI\u667A\u5B66\u7BB1\u5B50\uFF1A' + (rec.boxes || '-') + '\u53F0' }],
+      [{ tag: 'text', text: '\nAI\u667A\u5B66\u76D2\u5B50\uFF1A' + (rec.boxes || '-') + '\u53F0' }],
       [{ tag: 'text', text: '\n\u8BFE\u65F6\uFF1A' + (rec.hours ? rec.hours.toLocaleString() : '-') }],
       [{ tag: 'text', text: '\n\u8D60\u9001\uFF1A' + (getPerks(rec, state.stage).join('\u3001') || '-') }],
       [{ tag: 'text', text: '\n\n\u23F0 ' + now }],

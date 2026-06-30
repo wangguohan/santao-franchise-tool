@@ -386,35 +386,51 @@
 
 <script>
   // ── Pricing Data (S区 · 山东) ──
+  // 动态权益：根据学段匹配对应的绝招班
+  function bonusFor(tierId, stage) {
+    const map = {
+      's-std': { '\u521D\u4E2D': '\u4E2D\u8003\u7EDD\u62DB\u73ED(2\u90091)', '\u9AD8\u4E2D': '\u9AD8\u8003\u7EDD\u62DB\u73ED(2\u90091)' },
+      'e-std': { '\u521D\u4E2D': '\u4E2D\u8003\u7EDD\u62DB\u73ED(3\u90091)', '\u9AD8\u4E2D': '\u9AD8\u8003\u7EDD\u62DB\u73ED(3\u90091)', '\u521D+\u9AD8': '\u4E2D\u8003\u7EDD\u62DB\u73ED(3\u90091)\u3001\u9AD8\u8003\u7EDD\u62DB\u73ED(3\u90091)' },
+      'e-flag': { '\u521D+\u9AD8': '\u4E2D\u8003\u7EDD\u62DB(2\u90091)\u3001\u547D\u9898\u731C\u60F3(1\u671F)' },
+      'sch-full': { '\u521D+\u9AD8': '\u4E2D\u8003\u7EDD\u62DB\u73ED\u3001\u9AD8\u8003\u7EDD\u62DB\u73ED\u3001\u547D\u9898\u731C\u60F3' }
+    };
+    return (map[tierId] && map[tierId][stage]) || null;
+  }
+  function getPerks(tier, stage) {
+    const base = tier.perks || [];
+    const bonus = bonusFor(tier.id, stage);
+    return bonus ? [...base, bonus] : base;
+  }
+
   const PLANS = {
     single: {
       name: '单店版', icon: '\u{1F3E0}',
       tiers: [
         { id: 's-basic', name: '入门版', price: 59800, boxes: 15, hours: 2500, stage: ['初中','高中'],
           perks: ['AI测评系统(价值19,800)','智学系统(价值4,980)','全域增长运营指南(价值4,980)'],
-          repurchase: '盒子620元/台 · 课时9.8元/h(买1送1)', highlight: '\u4F4E\u6210\u672C\u8BD5\u6C34\uFF0C\u9002\u5408\u9996\u6B21\u521B\u4E1A' },
+          repurchase: 'AI智学盒子620元/台 · 课时9.8元/h(买1送1)', highlight: '\u4F4E\u6210\u672C\u8BD5\u6C34\uFF0C\u9002\u5408\u9996\u6B21\u521B\u4E1A' },
         { id: 's-std', name: '标准版', price: 99800, boxes: 30, hours: 5000, stage: ['初中','高中'],
-          perks: ['AI测评系统','智学系统','运营指南','\u4E2D\u8003\u7EDD\u62DB\u73ED(2\u90091)'],
-          repurchase: '盒子410元/台 · 课时2.2元/h', highlight: '\u6027\u4EF7\u6BD4\u4E4B\u9009\uFF0C\u6253\u9020\u672C\u5730\u6807\u6746\u95E8\u5E97' }
+          perks: ['AI测评系统','智学系统','运营指南'],
+          repurchase: 'AI智学盒子410元/台 · 课时2.2元/h', highlight: '\u6027\u4EF7\u6BD4\u4E4B\u9009\uFF0C\u6253\u9020\u672C\u5730\u6807\u6746\u95E8\u5E97' }
       ]
     },
     exclusive: {
       name: '独家版', icon: '\u{1F3F0}',
       tiers: [
         { id: 'e-std', name: '标准版', price: 159800, boxes: 50, hours: 9000, stage: ['初中','高中','初+高'],
-          perks: ['AI测评系统','智学系统','运营指南','\u9AD8\u8003\u7EDD\u62DB\u73ED(3\u90091)'],
-          repurchase: '盒子410元/台 · 课时2.2元/h', highlight: '\u533A\u57DF\u4FDD\u62A4\uFF0C\u5E02\u573A\u72EC\u5360\u4F18\u52BF' },
+          perks: ['AI测评系统','智学系统','运营指南'],
+          repurchase: 'AI智学盒子410元/台 · 课时2.2元/h', highlight: '\u533A\u57DF\u4FDD\u62A4\uFF0C\u5E02\u573A\u72EC\u5360\u4F18\u52BF' },
         { id: 'e-flag', name: '旗舰版', price: 249800, boxes: 120, hours: 12000, stage: ['初+高'],
-          perks: ['AI测评系统','智学系统','运营指南','\u4E2D\u8003\u7EDD\u62DB(2\u90091)','\u547D\u9898\u731C\u60F3(1\u671F)'],
-          repurchase: '盒子410元/台 · 课时2.2元/h', highlight: '\u65D7\u8230\u914D\u7F6E\uFF0C\u6253\u9020\u533A\u57DF\u6559\u80B2\u9AD8\u5730' }
+          perks: ['AI测评系统','智学系统','运营指南'],
+          repurchase: 'AI智学盒子410元/台 · 课时2.2元/h', highlight: '\u65D7\u8230\u914D\u7F6E\uFF0C\u6253\u9020\u533A\u57DF\u6559\u80B2\u9AD8\u5730' }
       ]
     },
     school: {
       name: '校全合作', icon: '\u{1F3EB}',
       tiers: [
         { id: 'sch-full', name: '校全合作版', price: 599800, boxes: 200, hours: 27000, stage: ['初+高'],
-          perks: ['AI测评系统','智学系统','运营指南','\u4E2D\u8003\u7EDD\u62DB\u73ED','\u9AD8\u8003\u7EDD\u62DB\u73ED','\u547D\u9898\u731C\u60F3'],
-          repurchase: '盒子410元/台 · 课时1.5元/h', highlight: '\u5168\u9762\u5408\u4F5C\uFF0C\u89C4\u6A21\u5316\u8FD0\u8425' }
+          perks: ['AI测评系统','智学系统','运营指南'],
+          repurchase: 'AI智学盒子410元/台 · 课时1.5元/h', highlight: '\u5168\u9762\u5408\u4F5C\uFF0C\u89C4\u6A21\u5316\u8FD0\u8425' }
       ]
     }
   };
@@ -541,7 +557,7 @@
       html += '<span>\u542B <strong>' + t.hours + '</strong> \u8BFE\u65F6</span>';
       if (plan.tiers.length > 1 && t.stage) html += '<span>\u9002\u7528\u5B66\u6BB5: <strong>' + t.stage.join(' / ') + '</strong></span>';
       html += '</div>';
-      html += '<div class="rec-perks">' + t.perks.map(p => '<span>' + p + '</span>').join('') + '</div>';
+      html += '<div class="rec-perks">' + getPerks(t, state.stage).map(p => '<span>' + p + '</span>').join('') + '</div>';
       html += '<div style="font-size:12px;color:var(--text-muted);margin-top:6px">\u590D\u8D2D\u4EF7: ' + t.repurchase + '</div>';
       html += '</div>';
     });
@@ -556,7 +572,7 @@
       html += '<tr><td>\u5408\u4F5C\u8D39\u7528</td>' + tiers.map(t => '<td class="highlight">&yen;' + formatPrice(t.price) + '</td>').join('') + '</tr>';
       html += '<tr><td>AI\u667A\u5B66\u7BB1\u5B50</td>' + tiers.map(t => '<td>' + t.boxes + '\u53F0</td>').join('') + '</tr>';
       html += '<tr><td>\u8BFE\u65F6\u6570</td>' + tiers.map(t => '<td>' + t.hours + '</td>').join('') + '</tr>';
-      html += '<tr><td>\u8D60\u9001\u6743\u76CA</td>' + tiers.map(t => '<td>' + t.perks.length + '\u9879</td>').join('') + '</tr>';
+      html += '<tr><td>\u8D60\u9001\u6743\u76CA</td>' + tiers.map(t => '<td>' + getPerks(t, state.stage).length + '\u9879</td>').join('') + '</tr>';
       html += '</tbody></table></div>';
     }
 
@@ -577,7 +593,7 @@
     if (state.stage) html += '<div class="summary-item"><span class="label">\u670D\u52A1\u5B66\u6BB5</span><span class="value">' + (stageMap[state.stage]||state.stage) + '</span></div>';
     html += '<div class="summary-item"><span class="label">AI\u667A\u5B66\u7BB1\u5B50</span><span class="value">' + rec.boxes + '\u53F0</span></div>';
     html += '<div class="summary-item"><span class="label">\u8BFE\u65F6\u6570</span><span class="value">' + rec.hours + '</span></div>';
-    html += '<div class="summary-item"><span class="label">\u8D60\u9001\u6743\u76CA</span><span class="value">' + rec.perks.length + '\u9879</span></div>';
+    html += '<div class="summary-item"><span class="label">\u8D60\u9001\u6743\u76CA</span><span class="value" style="white-space:pre-wrap">' + getPerks(rec, state.stage).join('\n') + '</span></div>';
     html += '<div class="summary-item"><span class="label">\u590D\u8D2D\u4EF7</span><span class="value">' + rec.repurchase + '</span></div>';
     html += '<div class="summary-total"><span class="label">\u5408\u4F5C\u8D39\u7528\uFF08\u4E00\u6B21\u6027\uFF09</span><span class="value">&yen;' + formatPrice(rec.price) + '</span></div>';
     html += '</div>';
@@ -586,7 +602,7 @@
 
   // ── Utils ──
   function formatPrice(p) {
-    if (p >= 10000) return (p / 10000).toFixed(0) + '\u4E07';
+    if (p >= 10000) return (p / 10000).toFixed(2) + '\u4E07';
     return p.toLocaleString();
   }
 
@@ -612,6 +628,9 @@
     origGoStep(n);
   };
 
+  // ── Lark Webhook ──
+  const WEBHOOK_URL = 'https://open.feishu.cn/open-apis/bot/v2/hook/142a77ed-c93c-441c-a35a-5a442c48e4dc';
+
   // ── Submit Form ──
   async function submitForm() {
     const form = document.getElementById('leadForm');
@@ -624,7 +643,6 @@
       showToast('\u8BF7\u586B\u5199\u59D3\u540D\u3001\u624B\u673A\u53F7\u7801\u548C\u6240\u5728\u57CE\u5E02');
       return;
     }
-
     if (!/^1[3-9]\d{9}$/.test(phone)) {
       showToast('\u8BF7\u8F93\u5165\u6B63\u786E\u7684\u624B\u673A\u53F7\u7801');
       return;
@@ -634,35 +652,44 @@
     const tiers = plan.tiers.filter(t => !state.stage || t.stage.includes(state.stage));
     const rec = tiers.length > 0 ? (tiers.length === 1 ? tiers[0] : tiers[Math.min(1, tiers.length-1)]) : plan.tiers[0];
     const stageMap = { '\u521D\u4E2D': '\u521D\u4E2D\u7248', '\u9AD8\u4E2D': '\u9AD8\u4E2D\u7248', '\u521D+\u9AD8': '\u521D\u9AD8\u53CC\u7248' };
+    const now = new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' });
+    const pStr = rec.price >= 10000 ? (rec.price / 10000).toFixed(0) + '\u4E07' : (rec.price || 0).toLocaleString();
 
-    const payload = {
-      name,
-      phone,
-      city,
-      mode: plan.name,
-      tierName: rec.name,
-      price: rec.price,
-      stage: state.stage ? (stageMap[state.stage] || state.stage) : '',
-      boxes: rec.boxes,
-      hours: rec.hours,
-      perks: rec.perks
-    };
+    const content = [
+      [{ tag: 'text', text: '\u65B0\u5BA2\u6237\u52A0\u76DF\u54A8\u8BE2' }],
+      [{ tag: 'text', text: '\n\n\u59D3\u540D\uFF1A' + name }],
+      [{ tag: 'text', text: '\n\u624B\u673A\uFF1A' + phone }],
+      [{ tag: 'text', text: '\n\u57CE\u5E02\uFF1A' + (city || '\u672A\u9009\u62E9') }],
+      [{ tag: 'text', text: '\n\u52A0\u76DF\u6A21\u5F0F\uFF1A' + (plan.name || '-') }],
+      [{ tag: 'text', text: '\n\u65B9\u6848\uFF1A' + (rec.name || '-') }],
+      [{ tag: 'text', text: '\n\u5408\u4F5C\u8D39\u7528\uFF1A\u00A5' + pStr }],
+      [{ tag: 'text', text: '\n\u670D\u52A1\u5B66\u6BB5\uFF1A' + (state.stage ? (stageMap[state.stage] || state.stage) : '-') }],
+      [{ tag: 'text', text: '\nAI\u667A\u5B66\u7BB1\u5B50\uFF1A' + (rec.boxes || '-') + '\u53F0' }],
+      [{ tag: 'text', text: '\n\u8BFE\u65F6\uFF1A' + (rec.hours ? rec.hours.toLocaleString() : '-') }],
+      [{ tag: 'text', text: '\n\u8D60\u9001\uFF1A' + (getPerks(rec, state.stage).join('\u3001') || '-') }],
+      [{ tag: 'text', text: '\n\n\u23F0 ' + now }],
+      [{ tag: 'text', text: '\n\u6765\u6E90\uFF1A\u667A\u80FD\u9009\u914D\u52A9\u624B' }]
+    ];
 
     const btn = document.querySelector('.btn-submit');
     btn.disabled = true;
     btn.textContent = '\u63D0\u4EA4\u4E2D...';
 
     try {
-      const res = await fetch('/api/submit', {
+      const res = await fetch(WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({
+          msg_type: 'post',
+          content: JSON.stringify({ post: { zh_cn: { title: '\u3010\u65B0\u52A0\u76DF\u7EBF\u7D22\u3011', content } } })
+        })
       });
-      const data = await res.json();
-      if (data.ok) {
+      const result = await res.json();
+      if (res.ok && result.code === 0) {
         showToast('\u63D0\u4EA4\u6210\u529F\uFF01\u4E13\u5C5E\u987E\u95EE\u5C06\u5FEB\u901F\u4E0E\u60A8\u8054\u7CFB');
         setTimeout(() => resetAll(), 2000);
       } else {
+        console.error('Webhook error:', result);
         showToast('\u63D0\u4EA4\u5931\u8D25\uFF0C\u8BF7\u7A0D\u540E\u91CD\u8BD5');
       }
     } catch (err) {

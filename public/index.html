@@ -638,6 +638,7 @@
       html += '<tr><td>\u5408\u4F5C\u8D39\u7528</td>' + tiers.map(t => '<td class="highlight">&yen;' + formatPrice(getDisplayPrice(t)) + '</td>').join('') + '</tr>';
       html += '<tr><td>AI\u667A\u5B66\u76D2\u5B50</td>' + tiers.map(t => '<td>' + getDisplayBoxes(t) + '\u53F0</td>').join('') + '</tr>';
       html += '<tr><td>\u8BFE\u65F6\u6570</td>' + tiers.map(t => '<td>' + getDisplayHours(t) + '</td>').join('') + '</tr>';
+      html += '<tr><td>\u590D\u8D2D\u4EF7</td>' + tiers.map(t => '<td>' + t.repurchase + '</td>').join('') + '</tr>';
       html += '<tr><td>\u8D60\u9001\u6743\u76CA</td>' + tiers.map(t => '<td>' + getPerks(t, state.stage).length + '\u9879</td>').join('') + '</tr>';
       html += '</tbody></table></div>';
     }

@@ -558,8 +558,9 @@
           { label: formatPrice(maxPrice) + '\u4EE5\u4E0A', value: maxPrice, hint: '\u5168\u529B\u4EE5\u8D74' }
         ];
     grid.innerHTML = '';
-    // Filter: show budget brackets that make sense for this plan (account for double package)
-    const prices = plan.tiers.map(getDisplayPrice).sort((a,b) => a-b);
+    // Filter: show budget brackets based on stage-compatible tiers only
+    const compatibleTiers = plan.tiers.filter(t => !state.stage || tierCompatible(t, state.stage, state.mode));
+    const prices = compatibleTiers.map(getDisplayPrice).sort((a,b) => a-b);
     const brackets = [];
     if (prices.length === 1) {
       brackets.push({ label: formatPrice(prices[0]), min: prices[0], hint: plan.tiers[0].highlight });

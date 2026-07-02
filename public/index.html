@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>三陶教育 · 加盟智能选配助手</title>
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -555,9 +558,8 @@
           { label: formatPrice(maxPrice) + '\u4EE5\u4E0A', value: maxPrice, hint: '\u5168\u529B\u4EE5\u8D74' }
         ];
     grid.innerHTML = '';
-    // Filter: show budget brackets that make sense for this plan
-    const tiers = plan.tiers;
-    const prices = tiers.map(t => t.price).sort((a,b) => a-b);
+    // Filter: show budget brackets that make sense for this plan (account for double package)
+    const prices = plan.tiers.map(getDisplayPrice).sort((a,b) => a-b);
     const brackets = [];
     if (prices.length === 1) {
       brackets.push({ label: formatPrice(prices[0]) + '\u4EE5\u4E0A', min: prices[0], hint: plan.tiers[0].highlight });

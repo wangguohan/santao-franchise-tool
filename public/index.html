@@ -617,7 +617,7 @@
   };
 
   // ── Lark Webhook ──
-  const WEBHOOK_URL = 'https://open.feishu.cn/open-apis/bot/v2/hook/142a77ed-c93c-441c-a35a-5a442c48e4dc';
+  const WEBHOOK_URL = 'https://santao-franchise-tool.vercel.app/api/submit';
 
   // ── Submit Form ──
   async function submitForm() {
@@ -676,7 +676,7 @@
         })
       });
       const result = await res.json();
-      if (res.ok && result.code === 0) return true;
+      if (res.ok && result.ok) return true;
       console.error('Webhook error:', result);
       return false;
     }

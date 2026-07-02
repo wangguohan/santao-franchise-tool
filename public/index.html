@@ -562,10 +562,10 @@
     const prices = plan.tiers.map(getDisplayPrice).sort((a,b) => a-b);
     const brackets = [];
     if (prices.length === 1) {
-      brackets.push({ label: formatPrice(prices[0]) + '\u4EE5\u4E0A', min: prices[0], hint: plan.tiers[0].highlight });
+      brackets.push({ label: formatPrice(prices[0]), min: prices[0], hint: plan.tiers[0].highlight });
     } else {
-      brackets.push({ label: formatPrice(prices[0]) + '\u4EE5\u5185', min: 0, max: prices[0], hint: '\u8F7B\u91CF\u8D77\u6B65' });
-      brackets.push({ label: formatPrice(prices[prices.length-1]) + '\u4EE5\u4E0A', min: prices[prices.length-1], hint: '\u5168\u529B\u4EE5\u8D74' });
+      brackets.push({ label: formatPrice(prices[0]), min: 0, max: prices[0], hint: '\u8F7B\u91CF\u8D77\u6B65' });
+      brackets.push({ label: formatPrice(prices[prices.length-1]), min: prices[prices.length-1], hint: '\u5168\u529B\u4EE5\u8D74' });
     }
     brackets.forEach(b => {
       const btn = document.createElement('button');

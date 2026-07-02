@@ -424,7 +424,29 @@
     return tier.stage.includes(stage);
   }
 
-  // 城市联动：选择城市后更新区县下拉
+  // ── 营收测算 ──
+  // 规则：2人/盒子，70%满员率
+  // 平时10个月 + 暑假
+  // 初中1600-1900元/月+暑假≈4500-5500，高中1900-2200元/月+暑假≈4500-5500
+  function getRevenueRange(tier, stage) {
+    const students = tier.boxes * 2 * 0.7;
+    const isMixed = stage === '\u521D+\u9AD8' || (tier.stage && tier.stage.length > 1 && tier.stage.includes('\u521D\u4E2D') && tier.stage.includes('\u9AD8\u4E2D'));
+    let lowPerStudent, highPerStudent;
+    if (isMixed) {
+      lowPerStudent = 1600*10 + 4500;
+      highPerStudent = 2200*10 + 5500;
+    } else if (stage === '\u9AD8\u4E2D') {
+      lowPerStudent = 1900*10 + 4500;
+      highPerStudent = 2200*10 + 5500;
+    } else {
+      lowPerStudent = 1600*10 + 4500;
+      highPerStudent = 1900*10 + 5500;
+    }
+    const low = Math.round(students * lowPerStudent / 10000);
+    const high = Math.round(students * highPerStudent / 10000);
+    return low === high ? low + '\u4E07' : low + '-' + high + '\u4E07';
+  }
+
   function updateDistricts() {
     const city = document.getElementById('citySelect').value;
     const districtSel = document.getElementById('districtSelect');
@@ -624,6 +646,19 @@
       }
       html += '</div>';
       html += '<div class="rec-perks">' + getPerks(t, state.stage).map(p => '<span>' + p + '</span>').join('') + '</div>';
+      // 省钱对比：独家版 vs 开3家单店
+      if (state.mode === 'exclusive') {
+        const isBoth = state.stage === '\u521D+\u9AD8';
+        const singleUnitPrice = isBoth ? 119600 : 59800;
+        const threeSingleCost = singleUnitPrice * 3;
+        const exclusivePrice = displayPrice;
+        const savings = threeSingleCost - exclusivePrice;
+        html += '<div style="font-size:12px;color:#e65100;margin-top:6px;line-height:1.5">\u72EC\u7ACB\u5F003\u5BB6' + (isBoth ? '\u53CC\u9879\u76EE\u5355\u5E97' : '\u5355\u5E97') + '\u9700 &yen;' + (threeSingleCost / 10000).toFixed(2) + '\u4E07\uFF0C\u72EC\u5BB6\u7248\u4EC5\u9700 &yen;' + (exclusivePrice / 10000).toFixed(2) + '\u4E07\uFF0C\u7701 &yen;' + (savings / 10000).toFixed(1) + '\u4E07</div>';
+      }
+      }
+      // 营收参考
+      const rev = getRevenueRange(t, state.stage || (t.stage[0] || ''));
+      html += '<div style="font-size:12px;color:#0d6e6b;margin-top:6px;line-height:1.5">\u5E74\u8425\u6536\u6F5C\u529B\u7EA6 <strong>' + rev + '</strong><span style="color:var(--text-muted)"> (\u5B9E\u9645\u56E0\u6821\u533A\u8FD0\u8425\u60C5\u51B5\u800C\u5F02)</span></div>';
       html += '<div style="font-size:12px;color:var(--text-muted);margin-top:6px">\u590D\u8D2D\u4EF7: ' + t.repurchase + '</div>';
       html += '</div>';
     });
@@ -666,7 +701,22 @@
     html += '<div class="summary-item"><span class="label">\u8BFE\u65F6\u6570</span><span class="value">' + dispHours + '</span></div>';
     html += '<div class="summary-item"><span class="label">\u8D60\u9001\u6743\u76CA</span><span class="value" style="white-space:pre-wrap">' + getPerks(rec, state.stage).join('\n') + '</span></div>';
     html += '<div class="summary-item"><span class="label">\u590D\u8D2D\u4EF7</span><span class="value">' + rec.repurchase + '</span></div>';
+    // 省钱对比
+    if (state.mode === 'exclusive') {
+      const isBoth = state.stage === '\u521D+\u9AD8';
+      const unitPrice = isBoth ? 119600 : 59800;
+      const threeCost = unitPrice * 3;
+      const savings = threeCost - dispPrice;
+      html += '<div class="summary-item"><span class="label">\u76F8\u6BD4\u5F00\u591A\u5E97</span><span class="value" style="color:#e65100">\u7701 &yen;' + (savings / 10000).toFixed(1) + '\u4E07</span></div>';
+    }
     html += '<div class="summary-total"><span class="label">\u5408\u4F5C\u8D39\u7528\uFF08\u4E00\u6B21\u6027\uFF09</span><span class="value">&yen;' + formatPrice(dispPrice) + '</span></div>';
+    html += '</div>';
+    // 营收参考 + 信任背书
+    const rev = getRevenueRange(rec, state.stage || (rec.stage[0] || ''));
+    html += '<div style="margin-top:16px;padding:16px;background:#f0fdf4;border-radius:12px;border:1px solid #bbf7d0;font-size:13px;line-height:1.6">';
+    html += '<div style="font-weight:600;margin-bottom:6px;color:#166534">\u53C2\u8003\u6536\u76CA</div>';
+    html += '<div style="color:#374151">\u63092\u4EBA/\u76D2\u5B50\uFF0C\u5355\u6821\u533A\u5BB9\u7EB370%\u5B66\u751F\u3001\u521D\u4E2D1600-1900\u5143/\u6708\u3001\u9AD8\u4E2D1900-2200\u5143/\u6708\u4F30\u7B97\uFF0C\u8BE5\u65B9\u6848\u5E74\u8425\u6536\u6F5C\u529B\u7EA6 <strong style="color:#0d6e6b">' + rev + '</strong><br><span style="color:var(--text-muted);font-size:12px">\uFF08\u5B9E\u9645\u6536\u76CA\u56E0\u6821\u533A\u8FD0\u8425\u60C5\u51B5\u800C\u5F02\uFF09</span></div>';
+    html += '<div style="margin-top:8px;padding-top:8px;border-top:1px solid #bbf7d0;color:#166534">\u2705 \u5C71\u4E1C\u5DF2\u6709 400+ \u5BB6\u6821\u533A\u9009\u62E9\u4E09\u9676\u6559\u80B2</div>';
     html += '</div>';
     area.innerHTML = html;
   }

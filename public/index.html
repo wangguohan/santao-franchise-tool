@@ -285,7 +285,7 @@
   // 平时10个月 + 暑假
   // 初中1600-1900元/月+暑假≈4500-5500，高中1900-2200元/月+暑假≈4500-5500
   function getRevenueRange(tier, stage) {
-    const students = tier.boxes * 2 * 0.7;
+    const students = getDisplayBoxes(tier) * 2 * 0.7;
     const isMixed = stage === '\u521D+\u9AD8' || (tier.stage && tier.stage.length > 1 && tier.stage.includes('\u521D\u4E2D') && tier.stage.includes('\u9AD8\u4E2D'));
     let lowPerStudent, highPerStudent;
     if (isMixed) {

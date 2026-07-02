@@ -617,7 +617,11 @@
   };
 
   // ── Lark Webhook ──
-  const WEBHOOK_URL = 'https://santao-franchise-tool.vercel.app/api/submit';
+  // 双通道：直连飞书 Webhook + Vercel 代理（先直连，失败后走代理）
+  const WEBHOOK_URLS = [
+    'https://open.feishu.cn/open-apis/bot/v2/hook/142a77ed-c93c-441c-a35a-5a442c48e4dc',
+    'https://santao-franchise-tool.vercel.app/api/submit'
+  ];
 
   // ── Submit Form ──
   async function submitForm() {
@@ -666,8 +670,8 @@
     btn.disabled = true;
     btn.textContent = '\u63D0\u4EA4\u4E2D...';
 
-    async function sendOnce() {
-      const res = await fetch(WEBHOOK_URL, {
+    async function sendOnce(url) {
+      const res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -676,23 +680,27 @@
         })
       });
       const result = await res.json();
-      if (res.ok && result.ok) return true;
-      console.error('Webhook error:', result);
+      // 直连飞书返回 code=0；Vercel 代理返回 ok=true
+      const isOk = (result.code === 0) || (result.ok === true);
+      if (res.ok && isOk) return true;
+      console.error('Webhook error at ' + url + ':', result);
       return false;
     }
 
-    let ok = false;
-    for (let i = 0; i < 3; i++) {
-      try {
-        ok = await sendOnce();
-        if (ok) break;
-      } catch (err) {
-        console.error('Submit attempt ' + (i+1) + ' error:', err.message);
+    for (const url of WEBHOOK_URLS) {
+      for (let i = 0; i < 3; i++) {
+        try {
+          ok = await sendOnce(url);
+          if (ok) break;
+        } catch (err) {
+          console.error('Submit attempt ' + (i+1) + ' via ' + url + ' error:', err.message);
+        }
+        if (!ok && i < 2) {
+          btn.textContent = '\u91CD\u8BD5\u4E2D...';
+          await new Promise(r => setTimeout(r, 1500));
+        }
       }
-      if (!ok && i < 2) {
-        btn.textContent = '\u91CD\u8BD5\u4E2D...';
-        await new Promise(r => setTimeout(r, 1500));
-      }
+      if (ok) break;
     }
 
     if (ok) {

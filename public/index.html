@@ -2,97 +2,56 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <title>三陶教育 · 加盟智能选配助手</title>
 <style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
-    --p: #0f766e;
-    --p-dark: #0d5e45;
-    --p-light: #14b8a6;
-    --accent: #d97706;
-    --accent-bg: #fef3c7;
-    --bg: #f1f5f9;
+    --p: #0d9488;
+    --p-dark: #0f766e;
+    --p-light: #5eead4;
+    --bg: #f8fafc;
     --card: #ffffff;
-    --text: #0f172a;
-    --text-secondary: #475569;
+    --text: #1e293b;
+    --text-secondary: #64748b;
     --text-muted: #94a3b8;
     --border: #e2e8f0;
+    --shadow: 0 4px 20px rgba(0,0,0,.08);
+    --shadow-lg: 0 12px 40px rgba(0,0,0,.12);
     --radius: 16px;
-    --radius-sm: 10px;
-    --shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
-    --shadow-lg: 0 10px 30px rgba(0,0,0,.08);
   }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
-    min-height: 100dvh;
+    background: var(--bg); color: var(--text); line-height: 1.6; padding: 16px;
   }
-  .container { max-width: 820px; margin: 0 auto; padding: 24px 20px; }
-  
-  /* Header */
-  .header { text-align: center; padding: 32px 0 8px; }
-  .header h1 { font-size: 26px; font-weight: 700; letter-spacing: -.5px; }
-  .header h1 span { color: var(--p); }
-  .header p { color: var(--text-secondary); font-size: 14px; margin-top: 4px; }
-
-  /* Progress */
-  .progress-wrap { display: flex; justify-content: center; gap: 0; margin: 28px 0 8px; position: relative; }
-  .progress-wrap::before {
-    content: ''; position: absolute; top: 16px; left: 60px; right: 60px;
-    height: 2px; background: var(--border); z-index: 0;
+  .container { max-width: 640px; margin: 0 auto; }
+  .header { text-align: center; padding: 24px 0 8px; }
+  .header h1 { font-size: 24px; color: var(--p-dark); }
+  .header p { font-size: 14px; color: var(--text-secondary); margin-top: 4px; }
+  .step-bar { display: flex; justify-content: space-between; padding: 20px 0 28px; position: relative; }
+  .step-bar::before {
+    content: ''; position: absolute; top: 32px; left: 16px; right: 16px; height: 2px; background: var(--border); z-index: 0;
   }
-  .progress-wrap::after {
-    content: ''; position: absolute; top: 16px; left: 60px; height: 2px;
-    background: var(--p); z-index: 1; transition: width .5s ease;
-    width: calc((var(--step, 0) / 4) * calc(100% - 120px));
-  }
-  .step-dot {
-    display: flex; flex-direction: column; align-items: center; gap: 6px;
-    z-index: 2; cursor: default; width: 110px;
-  }
-  .step-dot .circle {
-    width: 32px; height: 32px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 13px; font-weight: 600;
-    background: var(--border); color: var(--text-muted);
-    transition: all .35s ease;
-  }
-  .step-dot.active .circle { background: var(--p); color: #fff; box-shadow: 0 0 0 4px rgba(15,118,110,.15); }
-  .step-dot.done .circle { background: var(--p); color: #fff; }
-  .step-dot .label { font-size: 11px; color: var(--text-muted); white-space: nowrap; transition: color .3s; }
-  .step-dot.active .label, .step-dot.done .label { color: var(--text-secondary); font-weight: 500; }
-
-  /* Card container */
-  .main-card {
-    background: var(--card); border-radius: var(--radius);
-    box-shadow: var(--shadow-lg); padding: 36px 32px; margin-top: 20px;
-    min-height: 380px; position: relative; overflow: hidden;
-  }
-
-  /* Steps */
-  .step { display: none; animation: fadeIn .4s ease; }
+  .step-dot { position: relative; z-index: 1; text-align: center; width: 64px; }
+  .step-dot .circle { width: 28px; height: 28px; border-radius: 50%; background: #fff; border: 2px solid var(--border); margin: 0 auto 6px; line-height: 24px; font-size: 12px; color: var(--text-muted); transition: .3s; }
+  .step-dot.active .circle { background: var(--p); color: #fff; border-color: var(--p); }
+  .step-dot.done .circle { background: var(--p); color: #fff; border-color: var(--p); }
+  .step-dot .label { font-size: 12px; color: var(--text-muted); }
+  .step-dot.active .label { color: var(--p-dark); font-weight: 600; }
+  .main-card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow-lg); padding: 28px 24px; margin-top: 8px; }
+  .step { display: none; animation: fadeIn .3s ease; }
   .step.active { display: block; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-
-  .step-title { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
-  .step-subtitle { color: var(--text-secondary); font-size: 14px; margin-bottom: 24px; }
-
-  /* Options grid */
-  .options-grid { display: grid; gap: 12px; }
-  .options-grid-2 { grid-template-columns: 1fr 1fr; }
-  .options-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
-  .options-grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
-  
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .step-title { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+  .step-subtitle { font-size: 13px; color: var(--text-secondary); margin-bottom: 22px; }
+  .options-grid { display: grid; gap: 14px; }
+  .options-grid-3 { grid-template-columns: repeat(3, 1fr); }
   .option-card {
-    border: 2px solid var(--border); border-radius: var(--radius-sm);
-    padding: 18px 16px; cursor: pointer; transition: all .25s ease;
-    position: relative;
+    border: 1px solid var(--border); border-radius: 12px; padding: 18px 12px; text-align: center; cursor: pointer; transition: .2s; background: #fff;
   }
   .option-card:hover { border-color: var(--p-light); }
   .option-card.selected {
@@ -100,146 +59,60 @@
     box-shadow: 0 0 0 1px var(--p);
   }
   .option-card .icon { font-size: 24px; margin-bottom: 6px; display: block; }
-  .option-card .name { font-weight: 600; font-size: 15px; }
-  .option-card .desc { color: var(--text-secondary); font-size: 12px; margin-top: 2px; }
-  .option-card .tag {
-    display: inline-block; font-size: 11px; padding: 2px 8px;
-    border-radius: 12px; background: var(--accent-bg); color: var(--accent);
-    font-weight: 500; margin-top: 6px;
-  }
-  .option-card .price-tag {
-    font-size: 18px; font-weight: 700; color: var(--p); margin-top: 6px;
-  }
-  .option-card .price-from { font-size: 12px; color: var(--text-muted); }
-
-  /* Budget slider */
-  .budget-options { display: flex; gap: 10px; flex-wrap: wrap; }
-  .budget-btn {
-    flex: 1; min-width: 120px; padding: 16px 12px;
-    border: 2px solid var(--border); border-radius: var(--radius-sm);
-    background: var(--card); cursor: pointer; transition: all .25s;
-    text-align: center;
-  }
+  .option-card .name { font-size: 15px; font-weight: 600; }
+  .option-card .desc { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+  .option-card .price-from { font-size: 13px; color: var(--p-dark); font-weight: 600; margin-top: 6px; }
+  .option-card .tag { display: inline-block; font-size: 11px; color: var(--p-dark); background: rgba(15,118,110,.08); padding: 2px 8px; border-radius: 10px; margin-top: 6px; }
+  .budget-options { display: grid; gap: 12px; margin-top: 6px; }
+  .budget-btn { width: 100%; border: 1px solid var(--border); border-radius: 12px; background: #fff; padding: 14px; text-align: center; cursor: pointer; transition: .2s; }
   .budget-btn:hover { border-color: var(--p-light); }
-  .budget-btn.selected { border-color: var(--p); background: rgba(15,118,110,.04); }
-  .budget-btn .amount { font-size: 18px; font-weight: 700; color: var(--text); }
-  .budget-btn .hint { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-
-  /* Result steps */
-  .recommend-cards { display: flex; flex-direction: column; gap: 14px; margin-top: 8px; }
-  .rec-card {
-    border: 2px solid var(--border); border-radius: var(--radius-sm);
-    padding: 20px; transition: all .25s;
-  }
-  .rec-card:hover { box-shadow: var(--shadow); }
-  .rec-card.recommended {
-    border-color: var(--p); background: linear-gradient(135deg, rgba(15,118,110,.04), rgba(15,118,110,.01));
-    position: relative;
-  }
-  .rec-card.recommended::before {
-    content: '\63A8\8350'; position: absolute; top: -1px; right: 20px;
-    background: var(--p); color: #fff; font-size: 11px; padding: 2px 12px;
-    border-radius: 0 0 8px 8px; font-weight: 500;
-  }
-  .rec-card .rec-header { display: flex; justify-content: space-between; align-items: flex-start; }
-  .rec-card .rec-name { font-size: 17px; font-weight: 700; }
-  .rec-card .rec-price { font-size: 22px; font-weight: 700; color: var(--p); }
-  .rec-card .rec-price small { font-size: 13px; font-weight: 400; color: var(--text-muted); }
-  .rec-card .rec-meta { display: flex; gap: 16px; margin: 8px 0; flex-wrap: wrap; }
-  .rec-card .rec-meta span { font-size: 13px; color: var(--text-secondary); }
-  .rec-card .rec-meta strong { color: var(--text); }
-  .rec-card .rec-perks { margin: 8px 0 0; display: flex; flex-wrap: wrap; gap: 6px; }
-  .rec-card .rec-perks span {
-    font-size: 12px; background: #f1f5f9; padding: 3px 10px;
-    border-radius: 6px; color: var(--text-secondary);
-  }
-  .rec-card .rec-cta {
-    margin-top: 12px; display: inline-block; padding: 8px 24px;
-    background: var(--p); color: #fff; border: none; border-radius: 8px;
-    font-size: 14px; font-weight: 500; cursor: pointer; transition: background .2s;
-  }
-  .rec-card .rec-cta:hover { background: var(--p-dark); }
-
-  /* Comparison table */
+  .budget-btn.selected { border-color: var(--p); background: rgba(15,118,110,.04); box-shadow: 0 0 0 1px var(--p); }
+  .budget-btn .amount { font-size: 16px; font-weight: 700; color: var(--p-dark); }
+  .budget-btn .hint { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+  .btn-row { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; gap: 12px; }
+  .btn { padding: 12px 24px; border-radius: 10px; border: none; font-size: 15px; font-weight: 600; cursor: pointer; transition: .2s; }
+  .btn-primary { background: var(--p); color: #fff; }
+  .btn-primary:hover { background: var(--p-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(15,118,110,.3); }
+  .btn-outline { background: #fff; color: var(--text-secondary); border: 1px solid var(--border); }
+  .btn-outline:hover { border-color: var(--p); color: var(--p); }
+  .btn-secondary { background: var(--bg); color: var(--text-secondary); border: 1px solid var(--border); }
+  .btn-submit { width: 100%; margin-top: 16px; }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
+  .recommend-cards { display: grid; gap: 14px; }
+  .rec-card { border: 1px solid var(--border); border-radius: 12px; padding: 16px; background: #fff; position: relative; }
+  .rec-card.recommended { border-color: var(--p); background: rgba(15,118,110,.04); box-shadow: 0 0 0 1px var(--p); }
+  .rec-card.recommended::before { content: '推荐方案'; position: absolute; top: -9px; right: 12px; background: var(--p); color: #fff; font-size: 11px; padding: 2px 8px; border-radius: 10px; }
+  .rec-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .rec-name { font-size: 16px; font-weight: 700; }
+  .rec-price { font-size: 22px; font-weight: 800; color: var(--p-dark); white-space: nowrap; }
+  .rec-price small { font-size: 12px; font-weight: 400; margin-left: 2px; }
+  .rec-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; font-size: 12px; color: var(--text-secondary); }
+  .rec-meta span { background: var(--bg); padding: 3px 8px; border-radius: 6px; }
+  .rec-perks { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .rec-perks span { font-size: 11px; background: rgba(15,118,110,.08); color: var(--p-dark); padding: 3px 8px; border-radius: 10px; }
   .compare-table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 13px; }
   .compare-table th, .compare-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); }
   .compare-table th { background: #f8fafc; font-weight: 600; font-size: 12px; color: var(--text-secondary); }
   .compare-table tr:last-child td { border-bottom: none; }
   .compare-table .highlight { color: var(--p); font-weight: 600; }
-  .compare-table .rec-row { background: rgba(15,118,110,.03); }
-
-  /* Summary */
-  .summary-box {
-    background: linear-gradient(135deg, #f0fdfa, #f8fafc);
-    border: 2px solid var(--p-light); border-radius: var(--radius-sm);
-    padding: 24px; margin: 16px 0;
-  }
+  .summary-box { background: #f8fafc; border-radius: 12px; padding: 20px; }
   .summary-box h3 { font-size: 18px; margin-bottom: 12px; }
-  .summary-item { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; }
+  .summary-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .summary-item:last-child { border-bottom: none; }
   .summary-item .label { color: var(--text-secondary); }
-  .summary-item .value { font-weight: 600; }
-  .summary-total { display: flex; justify-content: space-between; padding: 12px 0 0; margin-top: 8px; border-top: 2px solid var(--border); font-size: 18px; }
-  .summary-total .value { font-weight: 700; color: var(--p); font-size: 24px; }
-
-  /* Form */
+  .summary-item .value { font-weight: 600; color: var(--text); }
+  .summary-total { display: flex; justify-content: space-between; padding: 12px 0; margin-top: 8px; border-top: 2px solid var(--p); font-size: 16px; font-weight: 800; }
   .form-group { margin-bottom: 14px; }
-  .form-group label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 4px; color: var(--text-secondary); }
-  .form-group input, .form-group select {
-    width: 100%; padding: 10px 14px; border: 2px solid var(--border);
-    border-radius: 8px; font-size: 14px; transition: border .2s;
-    font-family: inherit;
-  }
-  .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--p); }
+  .form-group label { display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; }
+  .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; background: #fff; }
+  .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--p); box-shadow: 0 0 0 3px rgba(15,118,110,.08); }
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-  /* Buttons */
-  .btn-row { display: flex; gap: 12px; justify-content: space-between; margin-top: 24px; }
-  .btn {
-    padding: 12px 28px; border-radius: 10px; font-size: 14px; font-weight: 600;
-    border: none; cursor: pointer; transition: all .2s; font-family: inherit;
-  }
-  .btn-primary { background: var(--p); color: #fff; }
-  .btn-primary:hover { background: var(--p-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(15,118,110,.3); }
-  .btn-secondary { background: var(--border); color: var(--text-secondary); }
-  .btn-secondary:hover { background: #cbd5e1; }
-  .btn-outline { background: transparent; border: 2px solid var(--border); color: var(--text); }
-  .btn-outline:hover { border-color: var(--p); color: var(--p); }
-  .btn-lg { padding: 14px 40px; font-size: 16px; }
-  .btn-block { width: 100%; }
-  .btn-submit {
-    background: var(--p); color: #fff; padding: 14px 40px; font-size: 16px;
-    width: 100%; border-radius: 10px; margin-top: 8px;
-  }
-  .btn-submit:hover { background: var(--p-dark); }
-
-  /* States */
-  .empty-state, .error-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
-  
-  /* Footer hint */
-  .footer-hint { text-align: center; font-size: 12px; color: var(--text-muted); margin-top: 16px; }
-
-  /* Toast */
-  .toast {
-    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-    background: #1e293b; color: #fff; padding: 12px 24px; border-radius: 8px;
-    font-size: 14px; box-shadow: 0 4px 20px rgba(0,0,0,.15);
-    opacity: 0; transition: opacity .3s, transform .3s; z-index: 100;
-    pointer-events: none;
-  }
+  .footer-hint { text-align: center; font-size: 12px; color: var(--text-muted); margin-top: 24px; }
+  .toast { position: fixed; left: 50%; bottom: 80px; transform: translateX(-50%) translateY(20px); background: rgba(30,41,59,.92); color: #fff; padding: 10px 20px; border-radius: 10px; font-size: 14px; opacity: 0; pointer-events: none; transition: .3s; z-index: 1000; }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-  /* Responsive */
-  @media (max-width: 640px) {
-    .container { padding: 16px 12px; }
-    .header h1 { font-size: 20px; }
-    .main-card { padding: 24px 16px; border-radius: 12px; }
-    .options-grid-2, .options-grid-3, .options-grid-4 { grid-template-columns: 1fr; }
-    .step-dot .label { display: none; }
-    .progress-wrap::before, .progress-wrap::after { left: 20px; right: 20px; }
-    .rec-card .rec-header { flex-direction: column; gap: 4px; }
+  @media (max-width: 540px) {
+    .options-grid-3 { grid-template-columns: 1fr; }
     .form-row { grid-template-columns: 1fr; }
-    .btn-row { flex-direction: column; }
-    .budget-options { flex-direction: column; }
     .compare-table { font-size: 12px; }
     .compare-table th, .compare-table td { padding: 8px 6px; }
   }
@@ -247,38 +120,20 @@
 </head>
 <body>
 
-<div class="container" id="app">
-  <!-- Header -->
+<div class="container">
   <div class="header">
-    <h1>三陶教育 · <span>加盟智能选配</span></h1>
-    <p>3步选出适合您的加盟方案，实时报价</p>
+    <h1>三陶教育 · 加盟智能选配</h1>
+    <p>为您推荐最适合的加盟方案</p>
   </div>
 
-  <!-- Progress -->
-  <div class="progress-wrap" id="progressBar">
-    <div class="step-dot active" data-step="0">
-      <div class="circle">1</div>
-      <div class="label">加盟模式</div>
-    </div>
-    <div class="step-dot" data-step="1">
-      <div class="circle">2</div>
-      <div class="label">服务学段</div>
-    </div>
-    <div class="step-dot" data-step="2">
-      <div class="circle">3</div>
-      <div class="label">预算范围</div>
-    </div>
-    <div class="step-dot" data-step="3">
-      <div class="circle">4</div>
-      <div class="label">推荐方案</div>
-    </div>
-    <div class="step-dot" data-step="4">
-      <div class="circle">5</div>
-      <div class="label">我的方案</div>
-    </div>
+  <div class="step-bar">
+    <div class="step-dot active" id="dot0"><div class="circle">1</div><div class="label">模式</div></div>
+    <div class="step-dot" id="dot1"><div class="circle">2</div><div class="label">学段</div></div>
+    <div class="step-dot" id="dot2"><div class="circle">3</div><div class="label">预算</div></div>
+    <div class="step-dot" id="dot3"><div class="circle">4</div><div class="label">推荐</div></div>
+    <div class="step-dot" id="dot4"><div class="circle">5</div><div class="label">方案</div></div>
   </div>
 
-  <!-- Main Card -->
   <div class="main-card">
 
     <!-- Step 1: 经营模式 -->
@@ -310,7 +165,7 @@
       </div>
       <div class="btn-row">
         <div></div>
-        <button class="btn btn-primary" onclick="goStep(1)" disabled id="modeNextBtn">下一步</button>
+        <button class="btn btn-primary" onclick="checkAndGo(1)" id="modeNextBtn">下一步</button>
       </div>
     </div>
 
@@ -321,7 +176,7 @@
       <div class="options-grid options-grid-3" id="stageGrid"></div>
       <div class="btn-row">
         <button class="btn btn-outline" onclick="goStep(0)">上一步</button>
-        <button class="btn btn-primary" onclick="goStep(2)" disabled id="stageNextBtn">下一步</button>
+        <button class="btn btn-primary" onclick="checkAndGo(2)" id="stageNextBtn">下一步</button>
       </div>
     </div>
 
@@ -332,27 +187,28 @@
       <div class="budget-options" id="budgetGrid"></div>
       <div class="btn-row">
         <button class="btn btn-outline" onclick="goStep(1)">上一步</button>
-        <button class="btn btn-primary" onclick="goStep(3)" disabled id="budgetNextBtn">查看推荐方案</button>
+        <button class="btn btn-primary" onclick="checkAndGo(3)" id="budgetNextBtn">查看推荐方案</button>
       </div>
     </div>
 
     <!-- Step 4: 推荐方案 -->
     <div class="step" id="step3">
-      <div class="step-title">为您推荐的加盟方案</div>
-      <div class="step-subtitle">基于您的选择，以下方案最适合您的需求</div>
+      <div class="step-title">为您推荐以下方案</div>
+      <div class="step-subtitle">您可随时返回修改需求</div>
       <div id="recommendArea"></div>
-      <div class="btn-row">
+      <div class="btn-row" style="margin-top:20px">
         <button class="btn btn-outline" onclick="goStep(2)">重新选择</button>
         <button class="btn btn-primary" onclick="goStep(4)">生成我的方案</button>
       </div>
     </div>
 
-    <!-- Step 5: 我的方案 -->
+    <!-- Step 5: 我的方案 + 留资 -->
     <div class="step" id="step4">
-      <div class="step-title">您的加盟方案</div>
-      <div class="step-subtitle">确认方案内容，留下联系方式，专属顾问将为您服务</div>
+      <div class="step-title">我的方案</div>
+      <div class="step-subtitle">请填写联系方式，获取详细报价</div>
       <div id="summaryArea"></div>
-      <form id="leadForm">
+
+      <form id="leadForm" style="margin-top:18px">
         <div class="form-row">
           <div class="form-group">
             <label>您的姓名</label>
@@ -412,9 +268,7 @@
   }
 
   // 单店版「初高双版」：内容翻倍
-  function isDoublePackage() {
-    return state.mode === 'single' && state.stage === '\u521D+\u9AD8';
-  }
+  function isDoublePackage() { return state.mode === 'single' && state.stage === '\u521D+\u9AD8'; }
   function getDisplayPrice(tier) { return isDoublePackage() ? tier.price * 2 : tier.price; }
   function getDisplayBoxes(tier) { return isDoublePackage() ? tier.boxes * 2 : tier.boxes; }
   function getDisplayHours(tier) { return isDoublePackage() ? tier.hours * 2 : tier.hours; }
@@ -447,6 +301,7 @@
     return low === high ? low + '\u4E07' : low + '-' + high + '\u4E07';
   }
 
+  // 城市联动：选择城市后更新区县下拉
   function updateDistricts() {
     const city = document.getElementById('citySelect').value;
     const districtSel = document.getElementById('districtSelect');
@@ -462,53 +317,53 @@
 
   // 山东城市区县数据
   const CITY_DISTRICTS = {
-    '济南市': ['历下区','市中区','槐荫区','天桥区','历城区','长清区','章丘区','济阳区','莱芜区','钢城区','平阴县','商河县'],
-    '青岛市': ['市南区','市北区','李沧区','崂山区','城阳区','黄岛区','即墨区','胶州市','平度市','莱西市'],
-    '淄博市': ['张店区','淄川区','博山区','周村区','临淄区','桓台县','高青县','沂源县'],
-    '枣庄市': ['市中区','薛城区','峄城区','台儿庄区','山亭区','滕州市'],
-    '东营市': ['东营区','河口区','垦利区','利津县','广饶县'],
-    '烟台市': ['芝罘区','福山区','牟平区','莱山区','蓬莱区','龙口市','莱阳市','莱州市','招远市','栖霞市','海阳市'],
-    '潍坊市': ['潍城区','寒亭区','坊子区','奎文区','青州市','诸城市','寿光市','安丘市','高密市','昌邑市','临朐县','昌乐县'],
-    '济宁市': ['任城区','兖州区','曲阜市','邹城市','微山县','鱼台县','金乡县','嘉祥县','汶上县','泗水县','梁山县'],
-    '泰安市': ['泰山区','岱岳区','新泰市','肥城市','宁阳县','东平县'],
-    '威海市': ['环翠区','文登区','荣成市','乳山市'],
-    '日照市': ['东港区','岚山区','五莲县','莒县'],
-    '临沂市': ['兰山区','罗庄区','河东区','沂南县','郯城县','沂水县','兰陵县','费县','平邑县','莒南县','蒙阴县','临沭县'],
-    '德州市': ['德城区','陵城区','乐陵市','禹城市','宁津县','庆云县','临邑县','齐河县','平原县','夏津县','武城县'],
-    '聊城市': ['东昌府区','茌平区','临清市','阳谷县','莘县','东阿县','冠县','高唐县'],
-    '滨州市': ['滨城区','沾化区','惠民县','阳信县','无棣县','博兴县','邹平市'],
-    '菏泽市': ['牡丹区','定陶区','曹县','单县','成武县','巨野县','郓城县','鄄城县','东明县']
+    '\u6D4E\u5357\u5E02': ['\u5386\u4E0B\u533A','\u5E02\u4E2D\u533A','\u69D0\u836B\u533A','\u5929\u6865\u533A','\u5386\u57CE\u533A','\u957F\u6E05\u533A','\u7AE0\u4E18\u533A','\u6D4E\u9633\u533A','\u83B1\u829C\u533A','\u94A2\u57CE\u533A','\u5E73\u9634\u53BF','\u5546\u6CB3\u53BF'],
+    '\u9752\u5C9B\u5E02': ['\u5E02\u5357\u533A','\u5E02\u5317\u533A','\u674E\u6CA7\u533A','\u5D02\u5C71\u533A','\u57CE\u9633\u533A','\u9EC4\u5C9B\u533A','\u5373\u58A8\u533A','\u80F6\u5DDE\u5E02','\u5E73\u5EA6\u5E02','\u83B1\u897F\u5E02'],
+    '\u6DC4\u535A\u5E02': ['\u5F20\u5E97\u533A','\u6DC4\u5DDD\u533A','\u535A\u5C71\u533A','\u5468\u6751\u533A','\u4E34\u6DC4\u533A','\u6853\u53F0\u53BF','\u9AD8\u9752\u53BF','\u6C82\u6E90\u53BF'],
+    '\u67A3\u5E84\u5E02': ['\u5E02\u4E2D\u533A','\u859B\u57CE\u533A','\u5CE6\u57CE\u533A','\u53F0\u513F\u5E84\u533A','\u5C71\u4EAD\u533A','\u6ED5\u5DDE\u5E02'],
+    '\u4E1C\u8425\u5E02': ['\u4E1C\u8425\u533A','\u6CB3\u53E3\u533A','\u57A6\u5229\u533A','\u5229\u6D25\u53BF','\u5E7F\u9976\u53BF'],
+    '\u70DF\u53F0\u5E02': ['\u829D\u7F57\u533A','\u798F\u5C71\u533A','\u725F\u5E73\u533A','\u83B1\u5C71\u533A','\u84EC\u83B1\u533A','\u9F99\u53E3\u5E02','\u83B1\u9633\u5E02','\u83B1\u5DDE\u5E02','\u62DB\u8FDC\u5E02','\u6816\u971E\u5E02','\u6D77\u9633\u5E02'],
+    '\u6F4D\u574A\u5E02': ['\u6F4D\u57CE\u533A','\u5BD2\u4EAD\u533A','\u574A\u5B50\u533A','\u594E\u6587\u533A','\u9752\u5DDE\u5E02','\u8BF8\u57CE\u5E02','\u5BFF\u5149\u5E02','\u5B89\u4E18\u5E02','\u9AD8\u5BC6\u5E02','\u660C\u9091\u5E02','\u4E34\u6710\u53BF','\u660C\u4E50\u53BF'],
+    '\u6D4E\u5B81\u5E02': ['\u4EFB\u57CE\u533A','\u5151\u5DDE\u533A','\u66F2\u961C\u5E02','\u90B9\u57CE\u5E02','\u5FAE\u5C71\u53BF','\u9C7C\u53F0\u53BF','\u91D1\u4E61\u53BF','\u5609\u7965\u53BF','\u6C76\u4E0A\u53BF','\u6CD7\u6C34\u53BF','\u6881\u5C71\u53BF'],
+    '\u6CF0\u5B89\u5E02': ['\u6CF0\u5C71\u533A','\u5CB1\u5CB3\u533A','\u65B0\u6CF0\u5E02','\u80A5\u57CE\u5E02','\u5B81\u9633\u53BF','\u4E1C\u5E73\u53BF'],
+    '\u5A01\u6D77\u5E02': ['\u73AF\u7FE0\u533A','\u6587\u767B\u533A','\u8363\u6210\u5E02','\u4E73\u5C71\u5E02'],
+    '\u65E5\u7167\u5E02': ['\u4E1C\u6E2F\u533A','\u5C9A\u5C71\u533A','\u4E94\u83B2\u53BF','\u8398\u53BF'],
+    '\u4E34\u6C82\u5E02': ['\u5170\u5C71\u533A','\u7F57\u5E84\u533A','\u6CB3\u4E1C\u533A','\u6C82\u5357\u53BF','\u90EF\u57CE\u53BF','\u6C82\u6C34\u53BF','\u5170\u9675\u53BF','\u8D39\u53BF','\u5E73\u9091\u53BF','\u8302\u5357\u53BF','\u8499\u9634\u53BF','\u4E34\u6CAD\u53BF'],
+    '\u5FB7\u5DDE\u5E02': ['\u5FB7\u57CE\u533A','\u9675\u57CE\u533A','\u4E50\u9675\u5E02','\u79B9\u57CE\u5E02','\u5B81\u6D25\u53BF','\u5E86\u4E91\u53BF','\u4E34\u9091\u53BF','\u9F50\u6CB3\u53BF','\u5E73\u539F\u53BF','\u590F\u6D25\u53BF','\u6B66\u57CE\u53BF'],
+    '\u804A\u57CE\u5E02': ['\u4E1C\u660C\u5E9C\u533A','\u830C\u5E73\u533A','\u4E34\u6E05\u5E02','\u9633\u8C37\u53BF','\u8398\u53BF','\u4E1C\u963F\u53BF','\u51A0\u53BF','\u9AD8\u5510\u53BF'],
+    '\u6EE8\u5DDE\u5E02': ['\u6EE8\u57CE\u533A','\u6CBE\u5316\u533A','\u60E0\u6C11\u53BF','\u9633\u4FE1\u53BF','\u65E0\u68E3\u53BF','\u535A\u5174\u53BF','\u90B9\u5E73\u5E02'],
+    '\u83CF\u6CFD\u5E02': ['\u7261\u4E39\u533A','\u5B9A\u9676\u533A','\u66F9\u53BF','\u5355\u53BF','\u6210\u6B66\u53BF','\u5DE8\u91CE\u53BF','\u90AE\u57CE\u53BF','\u9104\u57CE\u53BF','\u4E1C\u660E\u53BF']
   };
 
   const PLANS = {
     single: {
-      name: '单店版', icon: '\u{1F3E0}',
+      name: '\u5355\u5E97\u7248', icon: '\u{1F3E0}',
       tiers: [
-        { id: 's-basic', name: '入门版', price: 59800, boxes: 15, hours: 2500, stage: ['初中','高中'],
-          perks: ['AI测评系统(价值19,800)','智学系统(价值4,980)','专属运营服务群','海量免费精准题库'],
-          repurchase: 'AI智学盒子620元/台 · 课时9.8元/h(买1送1)', highlight: '\u4F4E\u6210\u672C\u8BD5\u6C34\uFF0C\u9002\u5408\u9996\u6B21\u521B\u4E1A' },
-        { id: 's-std', name: '标准版', price: 99800, boxes: 30, hours: 5000, stage: ['初中','高中'],
-          perks: ['AI测评系统','智学系统','专属运营服务群','海量免费精准题库'],
-          repurchase: 'AI智学盒子410元/台 · 烨晨课时2.2元/h，普高课时1.5元/h', highlight: '\u6027\u4EF7\u6BD4\u4E4B\u9009\uFF0C\u6253\u9020\u672C\u5730\u6807\u6746\u95E8\u5E97' }
+        { id: 's-basic', name: '\u5165\u95E8\u7248', price: 59800, boxes: 15, hours: 2500, stage: ['\u521D\u4E2D','\u9AD8\u4E2D'],
+          perks: ['AI\u6D4B\u8BC4\u7CFB\u7EDF(\u4EF7\u503C19,800)','\u667A\u5B66\u7CFB\u7EDF(\u4EF7\u503C4,980)','\u4E13\u5C5E\u8FD0\u8425\u670D\u52A1\u7FA4','\u6D77\u91CF\u514D\u8D39\u7CBE\u51C6\u9898\u5E93'],
+          repurchase: 'AI\u667A\u5B66\u76D2\u5B50620\u5143/\u53F0 \u00B7 \u8BFE\u65F69.8\u5143/h(\u4E701\u90011)', highlight: '\u4F4E\u6210\u672C\u8BD5\u6C34\uFF0C\u9002\u5408\u9996\u6B21\u521B\u4E1A' },
+        { id: 's-std', name: '\u6807\u51C6\u7248', price: 99800, boxes: 30, hours: 5000, stage: ['\u521D\u4E2D','\u9AD8\u4E2D'],
+          perks: ['AI\u6D4B\u8BC4\u7CFB\u7EDF','\u667A\u5B66\u7CFB\u7EDF','\u4E13\u5C5E\u8FD0\u8425\u670D\u52A1\u7FA4','\u6D77\u91CF\u514D\u8D39\u7CBE\u51C6\u9898\u5E93'],
+          repurchase: 'AI\u667A\u5B66\u76D2\u5B50410\u5143/\u53F0 \u00B7 \u70E4\u6668\u8BFE\u65F62.2\u5143/h\uFF0C\u666E\u9AD8\u8BFE\u65F61.5\u5143/h', highlight: '\u6027\u4EF7\u6BD4\u4E4B\u9009\uFF0C\u6253\u9020\u672C\u5730\u6807\u6746\u95E8\u5E97' }
       ]
     },
     exclusive: {
-      name: '独家版', icon: '\u{1F3F0}',
+      name: '\u72EC\u5BB6\u7248', icon: '\u{1F3F0}',
       tiers: [
-        { id: 'e-std', name: '标准版', price: 159800, boxes: 50, hours: 9000, stage: ['初中','高中'],
-          perks: ['AI测评系统','智学系统','专属运营服务群','海量免费精准题库'],
-          repurchase: 'AI智学盒子410元/台 · 烨晨课时2.2元/h，普高课时1.5元/h', highlight: '\u533A\u57DF\u4FDD\u62A4\uFF0C\u5E02\u573A\u72EC\u5360\u4F18\u52BF' },
-        { id: 'e-flag', name: '旗舰版', price: 249800, boxes: 120, hours: 12000, stage: ['初+高'],
-          perks: ['AI测评系统','智学系统','专属运营服务群','海量免费精准题库'],
-          repurchase: 'AI智学盒子410元/台 · 烨晨课时2.2元/h，普高课时1.5元/h', highlight: '\u65D7\u8230\u914D\u7F6E\uFF0C\u6253\u9020\u533A\u57DF\u6559\u80B2\u9AD8\u5730' }
+        { id: 'e-std', name: '\u6807\u51C6\u7248', price: 159800, boxes: 50, hours: 9000, stage: ['\u521D\u4E2D','\u9AD8\u4E2D'],
+          perks: ['AI\u6D4B\u8BC4\u7CFB\u7EDF','\u667A\u5B66\u7CFB\u7EDF','\u4E13\u5C5E\u8FD0\u8425\u670D\u52A1\u7FA4','\u6D77\u91CF\u514D\u8D39\u7CBE\u51C6\u9898\u5E93'],
+          repurchase: 'AI\u667A\u5B66\u76D2\u5B50410\u5143/\u53F0 \u00B7 \u70E4\u6668\u8BFE\u65F62.2\u5143/h\uFF0C\u666E\u9AD8\u8BFE\u65F61.5\u5143/h', highlight: '\u533A\u57DF\u4FDD\u62A4\uFF0C\u5E02\u573A\u72EC\u5360\u4F18\u52BF' },
+        { id: 'e-flag', name: '\u65D7\u8230\u7248', price: 249800, boxes: 120, hours: 12000, stage: ['\u521D+\u9AD8'],
+          perks: ['AI\u6D4B\u8BC4\u7CFB\u7EDF','\u667A\u5B66\u7CFB\u7EDF','\u4E13\u5C5E\u8FD0\u8425\u670D\u52A1\u7FA4','\u6D77\u91CF\u514D\u8D39\u7CBE\u51C6\u9898\u5E93'],
+          repurchase: 'AI\u667A\u5B66\u76D2\u5B50410\u5143/\u53F0 \u00B7 \u70E4\u6668\u8BFE\u65F62.2\u5143/h\uFF0C\u666E\u9AD8\u8BFE\u65F61.5\u5143/h', highlight: '\u65D7\u8230\u914D\u7F6E\uFF0C\u6253\u9020\u533A\u57DF\u6559\u80B2\u9AD8\u5730' }
       ]
     },
     school: {
-      name: '校企合作', icon: '\u{1F3EB}',
+      name: '\u6821\u4F01\u5408\u4F5C', icon: '\u{1F3EB}',
       tiers: [
-        { id: 'sch-full', name: '校企合作版', price: 599800, boxes: 200, hours: 27000, stage: ['初+高'],
-          perks: ['AI测评系统','智学系统','专属运营服务群','海量免费精准题库'],
-          repurchase: 'AI智学盒子410元/台 · 课时1.5元/h', highlight: '\u5168\u9762\u5408\u4F5C\uFF0C\u89C4\u6A21\u5316\u8FD0\u8425' }
+        { id: 'sch-full', name: '\u6821\u4F01\u5408\u4F5C\u7248', price: 599800, boxes: 200, hours: 27000, stage: ['\u521D+\u9AD8'],
+          perks: ['AI\u6D4B\u8BC4\u7CFB\u7EDF','\u667A\u5B66\u7CFB\u7EDF','\u4E13\u5C5E\u8FD0\u8425\u670D\u52A1\u7FA4','\u6D77\u91CF\u514D\u8D39\u7CBE\u51C6\u9898\u5E93'],
+          repurchase: 'AI\u667A\u5B66\u76D2\u5B50410\u5143/\u53F0 \u00B7 \u8BFE\u65F61.5\u5143/h', highlight: '\u5168\u9762\u5408\u4F5C\uFF0C\u89C4\u6A21\u5316\u8FD0\u8425' }
       ]
     }
   };
@@ -531,11 +386,18 @@
     if (n === 4) renderSummary();
   }
 
+  // 带校验的下一步
+  function checkAndGo(step) {
+    if (step === 1 && !state.mode) { showToast('\u8BF7\u5148\u9009\u62E9\u52A0\u76DF\u6A21\u5F0F'); return; }
+    if (step === 2 && !state.stage) { showToast('\u8BF7\u5148\u9009\u62E9\u670D\u52A1\u5B66\u6BB5'); return; }
+    if (step === 3 && !state.budget) { showToast('\u8BF7\u5148\u9009\u62E9\u9884\u7B97\u8303\u56F4'); return; }
+    goStep(step);
+  }
+
   // ── Step 0: Mode ──
   function selectMode(val) {
     state.mode = val;
     document.querySelectorAll('#modeGrid .option-card').forEach(el => el.classList.toggle('selected', el.dataset.value===val));
-    document.getElementById('modeNextBtn').disabled = false;
     // Set stage options for next step
     const plan = PLANS[val];
     const stages = plan.tiers.reduce((acc, t) => { t.stage.forEach(s => acc.add(s)); return acc; }, new Set());
@@ -554,32 +416,24 @@
       grid.appendChild(card);
     });
     document.getElementById('stageNextBtn').disabled = true;
-    document.getElementById('stageSubtitle').textContent = '选择「' + plan.name + '」对应的服务学段';
+    document.getElementById('stageSubtitle').textContent = '\u9009\u62E9\u300C' + plan.name + '\u300D\u5BF9\u5E94\u7684\u670D\u52A1\u5B66\u6BB5';
     // Reset
     state.stage = null;
+    state.budget = null;
+    document.querySelectorAll('#budgetGrid .budget-btn').forEach(el => el.classList.remove('selected'));
   }
 
   // ── Step 1: Stage ──
   function selectStage(val) {
     state.stage = val;
     document.querySelectorAll('#stageGrid .option-card').forEach(el => el.classList.toggle('selected', el.dataset.value===val));
-    document.getElementById('stageNextBtn').disabled = false;
   }
 
   // ── Step 2: Budget ──
   function renderBudget() {
     const grid = document.getElementById('budgetGrid');
-    const plan = PLANS[state.mode];
-    const minPrice = Math.min(...plan.tiers.map(t => t.price));
-    const maxPrice = Math.max(...plan.tiers.map(t => t.price));
-    const options = plan.tiers.length === 1
-      ? [{ label: formatPrice(minPrice) + '\u4EE5\u4E0A', value: minPrice, hint: plan.tiers[0].highlight }]
-      : [
-          { label: formatPrice(minPrice) + '\u4EE5\u5185', value: minPrice, hint: '\u8F7B\u91CF\u5165\u95E8' },
-          { label: formatPrice(minPrice+1) + ' - ' + formatPrice(maxPrice-1), value: (minPrice+maxPrice)/2, hint: '\u4E3B\u529B\u9009\u62E9' },
-          { label: formatPrice(maxPrice) + '\u4EE5\u4E0A', value: maxPrice, hint: '\u5168\u529B\u4EE5\u8D74' }
-        ];
     grid.innerHTML = '';
+    const plan = PLANS[state.mode];
     // Filter: show budget brackets based on stage-compatible tiers only
     const compatibleTiers = plan.tiers.filter(t => !state.stage || tierCompatible(t, state.stage, state.mode));
     const prices = compatibleTiers.map(getDisplayPrice).sort((a,b) => a-b);
@@ -600,7 +454,6 @@
         state.budget = { min: b.min||0, max: b.max||99999999 };
         document.querySelectorAll('#budgetGrid .budget-btn').forEach(el => el.classList.remove('selected'));
         btn.classList.add('selected');
-        document.getElementById('budgetNextBtn').disabled = false;
       };
       grid.appendChild(btn);
     });
@@ -637,7 +490,7 @@
       html += '<div style="font-size:13px;color:var(--text-secondary);margin-top:2px">' + t.highlight + '</div></div>';
       html += '<div class="rec-price">&yen;' + formatPrice(displayPrice) + '<small>' + (displayPrice >= 10000 ? '\u4E07' : '\u5143') + '</small></div></div>';
       html += '<div class="rec-meta">';
-      html += '<span>\u542B <strong>' + displayBoxes + '\u53F0</strong> AI\u667A\u5B66\u76D2\u5B50</span>';
+      html += '<span>\u542B <strong>' + displayBoxes + '</strong> AI\u667A\u5B66\u76D2\u5B50</span>';
       html += '<span>\u542B <strong>' + displayHours + '</strong> \u8BFE\u65F6</span>';
       // 适用学段显示：单店版 初+高 显示 "初+高"，其他按实际
       if (plan.tiers.length > 1 && t.stage) {
@@ -654,7 +507,6 @@
         const exclusivePrice = displayPrice;
         const savings = threeSingleCost - exclusivePrice;
         html += '<div style="font-size:12px;color:#e65100;margin-top:6px;line-height:1.5">\u72EC\u7ACB\u5F003\u5BB6' + (isBoth ? '\u53CC\u9879\u76EE\u5355\u5E97' : '\u5355\u5E97') + '\u9700 &yen;' + (threeSingleCost / 10000).toFixed(2) + '\u4E07\uFF0C\u72EC\u5BB6\u7248\u4EC5\u9700 &yen;' + (exclusivePrice / 10000).toFixed(2) + '\u4E07\uFF0C\u7701 &yen;' + (savings / 10000).toFixed(1) + '\u4E07</div>';
-      }
       }
       // 营收参考
       const rev = getRevenueRange(t, state.stage || (t.stage[0] || ''));
@@ -733,12 +585,13 @@
     setTimeout(() => t.classList.remove('show'), 3000);
   }
 
+  // ── Reset ──
   function resetAll() {
     state = { mode: null, stage: null, budget: null };
-    document.querySelectorAll('.option-card, .budget-btn').forEach(el => el.classList.remove('selected'));
-    document.getElementById('modeNextBtn').disabled = true;
-    document.getElementById('stageNextBtn').disabled = true;
-    document.getElementById('budgetNextBtn').disabled = true;
+    document.querySelectorAll('.option-card').forEach(el => el.classList.remove('selected'));
+    document.querySelectorAll('#budgetGrid .budget-btn').forEach(el => el.classList.remove('selected'));
+    document.getElementById('leadForm').reset();
+    document.getElementById('districtSelect').innerHTML = '<option value="">\u8BF7\u5148\u9009\u62E9\u57CE\u5E02</option>';
     goStep(0);
   }
 
@@ -817,6 +670,7 @@
         showToast('\u63D0\u4EA4\u5931\u8D25\uFF0C\u8BF7\u7A0D\u540E\u91CD\u8BD5');
       }
     } catch (err) {
+      console.error('Submit error:', err.message);
       showToast('\u7F51\u7EDC\u5F02\u5E38\uFF0C\u8BF7\u68C0\u67E5\u540E\u91CD\u8BD5');
     } finally {
       btn.disabled = false;
@@ -827,5 +681,6 @@
   // Init
   goStep(0);
 </script>
+
 </body>
 </html>

@@ -565,7 +565,6 @@
       brackets.push({ label: formatPrice(prices[0]) + '\u4EE5\u4E0A', min: prices[0], hint: plan.tiers[0].highlight });
     } else {
       brackets.push({ label: formatPrice(prices[0]) + '\u4EE5\u5185', min: 0, max: prices[0], hint: '\u8F7B\u91CF\u8D77\u6B65' });
-      brackets.push({ label: formatPrice(prices[0]+1) + ' - ' + formatPrice(prices[prices.length-1]-1), min: prices[0]+1, max: prices[prices.length-1]-1, hint: '\u4E3B\u529B\u9009\u62E9' });
       brackets.push({ label: formatPrice(prices[prices.length-1]) + '\u4EE5\u4E0A', min: prices[prices.length-1], hint: '\u5168\u529B\u4EE5\u8D74' });
     }
     brackets.forEach(b => {

@@ -82,6 +82,8 @@
   .rec-card { border: 1px solid var(--border); border-radius: 12px; padding: 16px; background: #fff; position: relative; }
   .rec-card.recommended { border-color: var(--p); background: rgba(15,118,110,.04); box-shadow: 0 0 0 1px var(--p); }
   .rec-card.recommended::before { content: '推荐方案'; position: absolute; top: -9px; right: 12px; background: var(--p); color: #fff; font-size: 11px; padding: 2px 8px; border-radius: 10px; }
+  .rec-card.selected { border-color: #f59e0b; box-shadow: 0 0 0 1px #f59e0b, 0 4px 20px rgba(245,158,11,.15); }
+  .rec-card.selected::after { content: '已选择'; position: absolute; top: -9px; left: 12px; background: #f59e0b; color: #fff; font-size: 11px; padding: 2px 8px; border-radius: 10px; }
   .rec-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
   .rec-name { font-size: 16px; font-weight: 700; }
   .rec-price { font-size: 22px; font-weight: 800; color: var(--p-dark); white-space: nowrap; }
@@ -369,7 +371,7 @@
   };
 
   // ── State ──
-  let state = { mode: null, stage: null, budget: null };
+  let state = { mode: null, stage: null, budget: null, selectedTierId: null };
   let currentStep = 0;
 
   // ── Step Navigation ──
@@ -419,6 +421,7 @@
     // Reset
     state.stage = null;
     state.budget = null;
+    state.selectedTierId = null;
     document.querySelectorAll('#budgetGrid .budget-btn').forEach(el => el.classList.remove('selected'));
   }
 
@@ -426,6 +429,12 @@
   function selectStage(val) {
     state.stage = val;
     document.querySelectorAll('#stageGrid .option-card').forEach(el => el.classList.toggle('selected', el.dataset.value===val));
+  }
+
+  // ── Step 3: 选择推荐方案卡片 ──
+  function selectRecommendTier(tierId) {
+    state.selectedTierId = tierId;
+    renderRecommend();
   }
 
   // ── Step 2: Budget ──
@@ -477,6 +486,11 @@
     }
     // Determine "recommended" - closest to mid-budget or first tier
     const bestIdx = tiers.length === 1 ? 0 : Math.min(1, tiers.length - 1);
+    // 默认选中推荐方案
+    const recommendedTier = tiers[bestIdx];
+    if (!state.selectedTierId || !tiers.some(t => t.id === state.selectedTierId)) {
+      state.selectedTierId = recommendedTier ? recommendedTier.id : null;
+    }
     const isDouble = isDoublePackage();
     let html = '<div class="recommend-cards">';
     tiers.forEach((t, i) => {
@@ -484,7 +498,8 @@
       const displayPrice = getDisplayPrice(t);
       const displayBoxes = getDisplayBoxes(t);
       const displayHours = getDisplayHours(t);
-      html += '<div class="rec-card' + (isRec ? ' recommended' : '') + '">';
+      const isSelected = state.selectedTierId === t.id;
+      html += '<div class="rec-card' + (isRec ? ' recommended' : '') + (isSelected ? ' selected' : '') + '" onclick="selectRecommendTier(\'' + t.id + '\')" data-tier-id="' + t.id + '">';
       html += '<div class="rec-header"><div><div class="rec-name">' + plan.name + ' - ' + t.name + '</div>';
       html += '<div style="font-size:13px;color:var(--text-secondary);margin-top:2px">' + t.highlight + '</div></div>';
       html += '<div class="rec-price">&yen;' + formatPrice(displayPrice) + '<small>' + (displayPrice >= 10000 ? '\u4E07' : '\u5143') + '</small></div></div>';
@@ -537,7 +552,7 @@
     const area = document.getElementById('summaryArea');
     const plan = PLANS[state.mode];
     const tiers = plan.tiers.filter(t => !state.stage || tierCompatible(t, state.stage, state.mode));
-    const rec = tiers.length > 0 ? (tiers.length === 1 ? tiers[0] : tiers[Math.min(1, tiers.length-1)]) : plan.tiers[0];
+    const rec = tiers.find(t => t.id === state.selectedTierId) || tiers[Math.min(1, tiers.length - 1)] || plan.tiers[0];
     const stageMap = { '\u521D\u4E2D': '\u521D\u4E2D\u7248', '\u9AD8\u4E2D': '\u9AD8\u4E2D\u7248', '\u521D+\u9AD8': '\u521D\u9AD8\u53CC\u7248' };
     const isDouble = isDoublePackage();
     const dispPrice = getDisplayPrice(rec);
@@ -586,7 +601,7 @@
 
   // ── Reset ──
   function resetAll() {
-    state = { mode: null, stage: null, budget: null };
+    state = { mode: null, stage: null, budget: null, selectedTierId: null };
     document.querySelectorAll('.option-card').forEach(el => el.classList.remove('selected'));
     document.querySelectorAll('#budgetGrid .budget-btn').forEach(el => el.classList.remove('selected'));
     document.getElementById('leadForm').reset();
@@ -651,7 +666,7 @@
     btn.disabled = true;
     btn.textContent = '\u63D0\u4EA4\u4E2D...';
 
-    try {
+    async function sendOnce() {
       const res = await fetch(WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -661,20 +676,33 @@
         })
       });
       const result = await res.json();
-      if (res.ok && result.code === 0) {
-        showToast('\u63D0\u4EA4\u6210\u529F\uFF01\u4E13\u5C5E\u987E\u95EE\u5C06\u5FEB\u901F\u4E0E\u60A8\u8054\u7CFB');
-        setTimeout(() => resetAll(), 2000);
-      } else {
-        console.error('Webhook error:', result);
-        showToast('\u63D0\u4EA4\u5931\u8D25\uFF0C\u8BF7\u7A0D\u540E\u91CD\u8BD5');
-      }
-    } catch (err) {
-      console.error('Submit error:', err.message);
-      showToast('\u7F51\u7EDC\u5F02\u5E38\uFF0C\u8BF7\u68C0\u67E5\u540E\u91CD\u8BD5');
-    } finally {
-      btn.disabled = false;
-      btn.textContent = '\u63D0\u4EA4\u6211\u7684\u65B9\u6848\uFF0C\u83B7\u53D6\u8BE6\u7EC6\u62A5\u4EF7';
+      if (res.ok && result.code === 0) return true;
+      console.error('Webhook error:', result);
+      return false;
     }
+
+    let ok = false;
+    for (let i = 0; i < 3; i++) {
+      try {
+        ok = await sendOnce();
+        if (ok) break;
+      } catch (err) {
+        console.error('Submit attempt ' + (i+1) + ' error:', err.message);
+      }
+      if (!ok && i < 2) {
+        btn.textContent = '\u91CD\u8BD5\u4E2D...';
+        await new Promise(r => setTimeout(r, 1500));
+      }
+    }
+
+    if (ok) {
+      showToast('\u63D0\u4EA4\u6210\u529F\uFF01\u4E13\u5C5E\u987E\u95EE\u5C06\u5FEB\u901F\u4E0E\u60A8\u8054\u7CFB');
+      setTimeout(() => resetAll(), 2000);
+    } else {
+      showToast('\u7F51\u7EDC\u5F02\u5E38\uFF0C\u8BF7\u5207\u6362\u7F51\u7EDC\u540E\u91CD\u8BD5\uFF0C\u6216\u76F4\u63A5\u52A0\u4F01\u5FAE\u8054\u7CFB\u987E\u95EE');
+    }
+    btn.disabled = false;
+    btn.textContent = '\u63D0\u4EA4\u6211\u7684\u65B9\u6848\uFF0C\u83B7\u53D6\u8BE6\u7EC6\u62A5\u4EF7';
   }
 
   // Init
